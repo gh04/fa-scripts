@@ -1,15 +1,20 @@
 (function() {
     'use strict';
 
-    console.log('Grade-based location filter script initializing...');
+    console.log('Grade-based options filter script initializing...');
 
     // Configuration
     const GRADE_FIELD_ID = 'tfa_898';
     const SUMMER_LOCATION_FIELD_ID = 'tfa_5266';
+    const PAFSS_PROGRAM_FIELD_ID = 'tfa_4997';
+    const PAFSS_PROGRAM_GROUP_ID = 'tfa_2591';
 
     // Grade groupings
-    const MIDDLE_SCHOOL_GRADES = ['tfa_904', 'tfa_905', 'tfa_906', 'tfa_907']; // 6, 7, 8, 9
+    const MIDDLE_SCHOOL_GRADES = ['tfa_904', 'tfa_905', 'tfa_906', 'tfa_907']; // 6, 7, 8, 9 (allowable in summer only)
     const ELEMENTARY_GRADES = ['tfa_929', 'tfa_930', 'tfa_931', 'tfa_899', 'tfa_900', 'tfa_901', 'tfa_902', 'tfa_903']; // T-K through 5
+    const HIGH_SCHOOL_GRADES = ['tfa_907', 'tfa_908', 'tfa_909', 'tfa_910']; // 9, 10, 11, 12,
+    const PAFSS_SFP_GRADES = ['tfa_901', 'tfa_902', 'tfa_903', 'tfa_904']; // 3, 4, 5, 6,
+    const PAFSS_YAP_POST_HS_GRADE = ['tfa_1098']; // Post HS.
 
     // Location option IDs
     const JAMES_LICK = 'tfa_5269';
@@ -18,12 +23,21 @@
   // Cleared out for this cycle
     // const LONGFELLOW = 'tfa_5270';
 
+    // PAFSS Programs option IDs
+    const PAFSS_LIFESKILLS = 'tfa_4998';
+    const PAFSS_CMCA = 'tfa_4999';
+    const PAFSS_YAPC = 'tfa_5000';
+    const PAFSS_SFP = 'tfa_5001';
+    const PAFSS_YAP = 'tfa_5002';
+
     // Store original options
     let originalLocationOptions = [];
+    let originalPAFSSProgramOptions = [];
 
     function initializeScript() {
         const gradeField = document.getElementById(GRADE_FIELD_ID);
         const locationField = document.getElementById(SUMMER_LOCATION_FIELD_ID);
+        const pafssProgramField = document.getElementById(PAFSS_PROGRAM_FIELD_ID);
 
         if (!gradeField) {
             console.error('Grade field not found:', GRADE_FIELD_ID);
@@ -35,16 +49,23 @@
             return;
         }
 
+        if (!pafssProgramField) {
+            console.error('PAFSS Program field not found:', PAFSS_PROGRAM_FIELD_ID);
+            return;
+        }
+
         console.log('Fields found successfully');
 
         // Store original location options
         storeOriginalOptions(locationField);
+        storeOriginalOptions(pafssProgramField);
 
         // Apply filter on page load if grade is already selected
         const currentGrade = gradeField.value;
         if (currentGrade) {
             console.log('Grade already selected on load:', currentGrade);
             filterLocationOptions(currentGrade, locationField);
+            filterPafssProgramOptions(currentGrade, pafssProgramField);
         }
 
         // Listen for grade changes
@@ -52,19 +73,39 @@
             const selectedGrade = this.value;
             console.log('Grade changed to:', selectedGrade);
             filterLocationOptions(selectedGrade, locationField);
+            filterPafssProgramOptions(selectedGrade, pafssProgramField);
         });
 
-        console.log('Grade-based location filter script initialized successfully');
+        console.log('Grade-based options filter script initialized successfully');
     }
 
-    function storeOriginalOptions(locationField) {
-        originalLocationOptions = Array.from(locationField.options).map(option => ({
-            value: option.value,
-            id: option.id,
-            text: option.text,
-            className: option.className
-        }));
-        console.log('Stored original location options:', originalLocationOptions.length);
+    function storeOriginalOptions(optionsField) {
+        if (!optionsField) {
+            console.warn('storeOriginalOptions() - Options field is null or undefined');
+            return;
+        }
+        switch (optionsField.id) {
+            case SUMMER_LOCATION_FIELD_ID:
+                originalLocationOptions = Array.from(optionsField.options).map(option => ({
+                    value: option.value,
+                    id: option.id,
+                    text: option.text,
+                    className: option.className
+                }));
+                console.log('Stored original location options:', originalLocationOptions.length);
+                break;
+            case PAFSS_PROGRAM_FIELD_ID:
+                originalPAFSSProgramOptions = Array.from(optionsField.options).map(option => ({
+                    value: option.value,
+                    id: option.id,
+                    text: option.text,
+                    className: option.className
+                }));
+                console.log('Stored original PAFSS program options:', originalPAFSSProgramOptions.length);
+                break;
+        default:
+            console.log('Options field not found:', optionsField.id);
+        }
     }
 
     function filterLocationOptions(selectedGrade, locationField) {
@@ -111,6 +152,52 @@
 
         } catch (error) {
             console.error('Error filtering location options:', error);
+        }
+    }
+
+    function filterPafssProgramOptions(selectedGrade, pafssProgramField) {
+        try {
+            // Reset location field value
+            pafssProgramField.value = '';
+
+            // Clear ALL options including placeholder
+            while (pafssProgramField.options.length > 0) {
+                pafssProgramField.remove(0);
+            }
+
+            let optionsToShow = [];
+
+            if (PAFSS_SFP_GRADES.includes(selectedGrade)) {
+                // Show only SFP for grades 3-6
+                optionsToShow = [PAFSS_SFP];
+                console.log('Showing PAFSS SFP only (grades 3-6)');
+            } else if (HIGH_SCHOOL_GRADES.includes(selectedGrade)) {
+              // Show LifeSkills, CMCA/YIC, YPAC, YAP for 9 through 12
+                optionsToShow = [PAFSS_LIFESKILLS, PAFSS_CMCA, PAFSS_YAP, PAFSS_YAPC];
+                console.log('Showing high school PAFSS programs (9 through 12)');
+            } else if (PAFSS_YAP_POST_HS_GRADE.includes(selectedGrade)) {
+                // Show YAP for Post HS
+                optionsToShow = [PAFSS_YAP];
+                console.log('Showing Post HS PAFSS Program');
+            } else {
+                // No grade selected or other grade - Default to all
+                optionsToShow = [PAFSS_LIFESKILLS, PAFSS_CMCA, PAFSS_YAP, PAFSS_YAPC, PAFSS_SFP];
+                console.log('filterPafssProgramOptions() - No valid grade selected - showing all options. Form conditionals will hide PAFSS');
+            }
+
+            // Add options back (including placeholder)
+            originalPAFSSProgramOptions.forEach(optionData => {
+                if (optionData.value === '' || optionsToShow.includes(optionData.id)) {
+                    const option = new Option(optionData.text, optionData.value);
+                    option.id = optionData.id;
+                    option.className = optionData.className;
+                    pafssProgramField.add(option);
+                }
+            });
+            console.log('PAFSS Programs options filtered. Available options:', optionsToShow.length);
+
+        } catch (error) {
+            console.error('Error filtering PAFSS program options:', error);
         }
     }
 
