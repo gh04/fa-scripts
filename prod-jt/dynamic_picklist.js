@@ -92,7 +92,7 @@
                     text: option.text,
                     className: option.className
                 }));
-                console.log('Stored original location options:', originalLocationOptions.length);
+                console.log('storeOriginalOptions() - Stored original location options:', originalLocationOptions.length);
                 break;
             case PAFSS_PROGRAM_FIELD_ID:
                 originalPAFSSProgramOptions = Array.from(optionsField.options).map(option => ({
@@ -101,10 +101,10 @@
                     text: option.text,
                     className: option.className
                 }));
-                console.log('Stored original PAFSS program options:', originalPAFSSProgramOptions.length);
+                console.log('storeOriginalOptions() - Stored original PAFSS program options:', originalPAFSSProgramOptions.length);
                 break;
         default:
-            console.log('Options field not found:', optionsField.id);
+            console.log('storeOriginalOptions() - Options field not found:', optionsField.id);
         }
     }
 
@@ -123,19 +123,19 @@
             if (MIDDLE_SCHOOL_GRADES.includes(selectedGrade)) {
                 // Show only James Lick for grades 6-9
                 optionsToShow = [JAMES_LICK];
-                console.log('Showing James Lick only (grades 6-9)');
+                console.log('filterLocationOptions() - Showing James Lick only (grades 6-9)');
             } else if (ELEMENTARY_GRADES.includes(selectedGrade)) {
               // Show BVHM, Cesar Chavez for T-K through 5
                 optionsToShow = [BVHM, CESAR_CHAVEZ];
                 // Show BVHM, Cesar Chavez, and Longfellow for T-K through 5
                 // optionsToShow = [BVHM, CESAR_CHAVEZ, LONGFELLOW];
-                console.log('Showing elementary locations (T-K through 5)');
+                console.log('filterLocationOptions() - Showing elementary locations (T-K through 5)');
             } else {
                 // No grade selected or other grade - show all options
                 optionsToShow = [JAMES_LICK, BVHM, CESAR_CHAVEZ];
                 // // No grade selected or other grade - show all options
                 // optionsToShow = [JAMES_LICK, BVHM, CESAR_CHAVEZ, LONGFELLOW];
-                console.log('No valid grade selected - showing all options');
+                console.log('filterLocationOptions() - No valid grade selected - showing all options');
             }
 
             // Add options back (including placeholder)
@@ -148,10 +148,10 @@
                 }
             });
 
-            console.log('Location options filtered. Available options:', optionsToShow.length);
+            console.log('filterLocationOptions() - Location options filtered. Available options:', optionsToShow.length);
 
         } catch (error) {
-            console.error('Error filtering location options:', error);
+            console.error('filterLocationOptions() - Error filtering location options:', error);
         }
     }
 
@@ -170,15 +170,15 @@
             if (PAFSS_SFP_GRADES.includes(selectedGrade)) {
                 // Show only SFP for grades 3-6
                 optionsToShow = [PAFSS_SFP];
-                console.log('Showing PAFSS SFP only (grades 3-6)');
+                console.log('filterPafssProgramOptions() - Showing PAFSS SFP only (grades 3-6)');
             } else if (HIGH_SCHOOL_GRADES.includes(selectedGrade)) {
               // Show LifeSkills, CMCA/YIC, YPAC, YAP for 9 through 12
                 optionsToShow = [PAFSS_LIFESKILLS, PAFSS_CMCA, PAFSS_YAP, PAFSS_YAPC];
-                console.log('Showing high school PAFSS programs (9 through 12)');
+                console.log('filterPafssProgramOptions() - Showing high school PAFSS programs (9 through 12)');
             } else if (PAFSS_YAP_POST_HS_GRADE.includes(selectedGrade)) {
                 // Show YAP for Post HS
                 optionsToShow = [PAFSS_YAP];
-                console.log('Showing Post HS PAFSS Program');
+                console.log('filterPafssProgramOptions() - Showing Post HS PAFSS Program');
             } else {
                 // No grade selected or other grade - Default to all
                 optionsToShow = [PAFSS_LIFESKILLS, PAFSS_CMCA, PAFSS_YAP, PAFSS_YAPC, PAFSS_SFP];
@@ -194,10 +194,10 @@
                     pafssProgramField.add(option);
                 }
             });
-            console.log('PAFSS Programs options filtered. Available options:', optionsToShow.length);
+            console.log('filterPafssProgramOptions() - PAFSS Programs options filtered. Available options:', optionsToShow.length);
 
         } catch (error) {
-            console.error('Error filtering PAFSS program options:', error);
+            console.error('filterPafssProgramOptions() - Error filtering PAFSS program options:', error);
         }
     }
 
