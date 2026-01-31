@@ -24,8 +24,8 @@
     // const LONGFELLOW = 'tfa_5270';
 
     // PAFSS Programs option IDs
-    const PAFSS_LIFESKILLS = 'tfa_4998';
-    const PAFSS_CMCA = 'tfa_4999';
+    const PAFSS_CMCA = 'tfa_4998';
+    const PAFSS_YIC = 'tfa_4999';
     const PAFSS_YAPC = 'tfa_5000';
     const PAFSS_SFP = 'tfa_5001';
     const PAFSS_YAP = 'tfa_5002';
@@ -173,7 +173,7 @@
                 console.log('filterPafssProgramOptions() - Showing PAFSS SFP only (grades 3-6)');
             } else if (HIGH_SCHOOL_GRADES.includes(selectedGrade)) {
               // Show LifeSkills, CMCA/YIC, YPAC, YAP for 9 through 12
-                optionsToShow = [PAFSS_LIFESKILLS, PAFSS_CMCA, PAFSS_YAP, PAFSS_YAPC];
+                optionsToShow = [PAFSS_CMCA, PAFSS_YIC, PAFSS_YAP, PAFSS_YAPC];
                 console.log('filterPafssProgramOptions() - Showing high school PAFSS programs (9 through 12)');
             } else if (PAFSS_YAP_POST_HS_GRADE.includes(selectedGrade)) {
                 // Show YAP for Post HS
@@ -181,7 +181,7 @@
                 console.log('filterPafssProgramOptions() - Showing Post HS PAFSS Program');
             } else {
                 // No grade selected or other grade - Default to all
-                optionsToShow = [PAFSS_LIFESKILLS, PAFSS_CMCA, PAFSS_YAP, PAFSS_YAPC, PAFSS_SFP];
+                optionsToShow = [PAFSS_CMCA, PAFSS_YIC, PAFSS_YAP, PAFSS_YAPC, PAFSS_SFP];
                 console.log('filterPafssProgramOptions() - No valid grade selected - showing all options. Form conditionals will hide PAFSS');
             }
 
