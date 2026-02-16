@@ -110,8 +110,9 @@
 
     function filterLocationOptions(selectedGrade, locationField) {
         try {
-            // Reset location field value
-            locationField.value = '';
+            // SAVE the current value BEFORE clearing (for prefill support)
+            const currentValue = locationField.value;
+            console.log('filterLocationOptions() - Current location value before filtering:', currentValue);
 
             // Clear ALL options including placeholder
             while (locationField.options.length > 0) {
@@ -148,6 +149,14 @@
                 }
             });
 
+            // RESTORE the value if it still exists in the filtered options
+            if (currentValue && optionsToShow.includes(currentValue)) {
+                locationField.value = currentValue;
+                console.log('filterLocationOptions() - Restored location value after filtering:', currentValue);
+            } else if (currentValue) {
+                console.warn('filterLocationOptions() - Prefilled location value', currentValue, 'not available in filtered options');
+            }
+
             console.log('filterLocationOptions() - Location options filtered. Available options:', optionsToShow.length);
 
         } catch (error) {
@@ -157,8 +166,9 @@
 
     function filterPafssProgramOptions(selectedGrade, pafssProgramField) {
         try {
-            // Reset location field value
-            pafssProgramField.value = '';
+            // SAVE the current value BEFORE clearing (for prefill support)
+            const currentValue = pafssProgramField.value;
+            console.log('filterPafssProgramOptions() - Current PAFSS value before filtering:', currentValue);
 
             // Clear ALL options including placeholder
             while (pafssProgramField.options.length > 0) {
@@ -194,6 +204,15 @@
                     pafssProgramField.add(option);
                 }
             });
+
+            // RESTORE the value if it still exists in the filtered options
+            if (currentValue && optionsToShow.includes(currentValue)) {
+                pafssProgramField.value = currentValue;
+                console.log('filterPafssProgramOptions() - Restored PAFSS value after filtering:', currentValue);
+            } else if (currentValue) {
+                console.warn('filterPafssProgramOptions() - Prefilled PAFSS value', currentValue, 'not available in filtered options');
+            }
+
             console.log('filterPafssProgramOptions() - PAFSS Programs options filtered. Available options:', optionsToShow.length);
 
         } catch (error) {
